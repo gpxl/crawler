@@ -1,17 +1,5 @@
 #!/usr/bin/env ruby
 
-# Public: Crawl a given uri and return a sitemap of per page relative uris and assets
-#
-# uri  - The URI to be crawled
-# exclude - Optional ergular expression to exclude uris from crawl
-#
-# Examples
-#
-#   Crawler.new('https://www.digitalocean.com', '\/community\/|\/blog\/|\/assets\/|mailto')
-#   # => 'TomTomTomTom'
-#
-# Returns the duplicated String.
-
 gem 'nokogiri'
 gem 'open_uri_redirections'
 
