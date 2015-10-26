@@ -8,10 +8,9 @@ require 'open-uri'
 require 'open_uri_redirections'
 
 class Crawler
-
   attr_reader :base_uri, :relative_uris, :pages
 
-  def initialize(uri, options = {exclude: '', allow_redirections: :none, output: false})
+  def initialize(uri, options = { exclude: '', allow_redirections: :none, output: false })
     puts options.inspect
     @base_uri = uri
     @relative_uris = []
@@ -24,12 +23,12 @@ class Crawler
   end
 
   def output_map
-    self.pages.map do |page|
+    pages.map do |page|
       puts page[:uri]
-      puts "links"
-      page[:relative_uris].map {|link| puts "   #{link}"}
-      puts "assets"
-      page[:assets].map {|asset| puts "   #{asset}"}
+      puts 'links'
+      page[:relative_uris].map { |link| puts "   #{link}" }
+      puts 'assets'
+      page[:assets].map { |asset| puts "   #{asset}" }
     end
   end
 
@@ -40,13 +39,13 @@ class Crawler
     assets = extract_assets(doc)
     @relative_uris << uri
     puts "indexed: #{uri}"
-    @pages << {uri: uri, relative_uris: links, assets: assets}
-    links.map{|link| build_map_with(@base_uri + link)}
+    @pages << { uri: uri, relative_uris: links, assets: assets }
+    links.map { |link| build_map_with(@base_uri + link) }
   end
 
   def fetch_uri(uri)
     begin
-      file = open(uri, :allow_redirections => @allow_redirections)
+      file = open(uri, allow_redirections: @allow_redirections)
     rescue => e
       puts e
     end
@@ -59,18 +58,17 @@ class Crawler
 
     uris.map do |u|
       if u.value.match(/#{@regex}/).nil?
-        local_uris << u.value.gsub(/^([^\/])/,'/\1')
+        local_uris << u.value.gsub(%r{^([^/])}, '/\1')
       end
     end
     local_uris
   end
 
   def extract_uris(doc)
-     doc.xpath('//a/@href')
+    doc.xpath('//a/@href')
   end
 
   def extract_assets(doc)
-    doc.xpath('//img/@src|//link/@href|//script/@src').map{|asset| asset.value}
+    doc.xpath('//img/@src|//link/@href|//script/@src').map(&:value)
   end
-
 end
